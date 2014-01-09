@@ -39,14 +39,14 @@
 %    algorithm = MD5 | SHA1 | SHA256 | SHA512 (default SHA1)
 
 
--include("qrcode.hrl").
+-include("../include/qrcode.hrl").
 
 -compile(export_all).
 
 -define(TTY(Term), io:format(user, "[~p] ~p~n", [?MODULE, Term])).
 
 run() ->
-	Passcode = crypto:sha(<<"password">>),
+	Passcode = crypto:hash(sha,<<"password">>),
 	run(<<"demo@mydomain.com">>, Passcode, 60).
 
 run(Domain, Passcode, Seconds) ->
@@ -99,7 +99,7 @@ get_pixels0(<<>>, Acc) ->
 
 %%
 totp() ->
-	Key = crypto:sha(<<"password">>),	
+	Key = crypto:hash(sha, <<"password">>),	
 	totp(Key, 60).
 totp(Key, Period) ->
 	T = unow() div Period,
@@ -107,7 +107,7 @@ totp(Key, Period) ->
 %% RFC-4226 "HOTP: An HMAC-Based One-Time Password Algorithm"
 %% @ref <http://tools.ietf.org/html/rfc4226>
 hotp(Key, Count) when is_binary(Key), is_integer(Count) ->
-	HS = crypto:sha_mac(Key, <<Count:64>>),
+	HS = crypto:hmac(Key, <<Count:64>>),
 	<<_:19/binary, _:4, Offset:4>> = HS,
 	<<_:Offset/binary, _:1, P:31, _/binary>> = HS,
 	HOTP = integer_to_list(P rem 1000000),

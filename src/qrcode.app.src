@@ -1,0 +1,11 @@
+{application, qrcode,
+ [
+  {description, "QR code generator."},
+  {vsn, git},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.

@@ -14,7 +14,7 @@
 
 -module(qrcode).
 
--include("qrcode.hrl").
+-include("../include/qrcode.hrl").
 -include("qrcode_params.hrl").
 
 -export([encode/1, decode/1]).

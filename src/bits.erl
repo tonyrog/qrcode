@@ -40,30 +40,11 @@ append([H|T], Acc) ->
 append([], Acc) ->
 	Acc.
 
-%%
 bitlist(Bin) ->
-	bitlist(Bin, []).
-bitlist(<<X:1, Bin/bits>>, Acc) ->
-	bitlist(Bin, [X|Acc]);
-bitlist(<<>>, Acc) ->
-	lists:reverse(Acc).
+    [ X || <<X:1>> <= Bin ].
 
-%%
 bitstring(Bin) ->
-	bitstring(Bin, <<>>).
-bitstring(<<0:1, Bin/bits>>, Acc) ->
-	bitstring(Bin, <<Acc/binary, $0>>);
-bitstring(<<1:1, Bin/bits>>, Acc) ->
-	bitstring(Bin, <<Acc/binary, $1>>);
-bitstring(<<>>, Acc) ->
-	Acc.
+    << <<(X+$0):8>> || <<X:1>> <= Bin >>.
 
-%%
 stringbits(Bin) ->
-	stringbits(Bin, <<>>).
-stringbits(<<$0, Bin/binary>>, Acc) ->
-	stringbits(Bin, <<Acc/bits, 0:1>>);
-stringbits(<<$1, Bin/binary>>, Acc) ->
-	stringbits(Bin, <<Acc/bits, 1:1>>);
-stringbits(<<>>, Acc) ->
-	Acc.
+    << <<(X-$0):1>> || <<X:8>> <= Bin >>.

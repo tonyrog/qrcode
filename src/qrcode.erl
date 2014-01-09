@@ -18,6 +18,7 @@
 -include("qrcode_params.hrl").
 
 -export([encode/1, decode/1]).
+-compile(export_all).
 	
 %%
 decode(_Bin) -> 
@@ -125,11 +126,11 @@ encode_bytes(Version, Bin) when is_binary(Bin) ->
 pad_block(Bin, BlockLength) ->
 	PadCount = BlockLength - byte_size(Bin),
 	Pad = binary:copy(<<?DATA_PAD_0, ?DATA_PAD_1>>, PadCount bsr 1),
-	case PadCount band 1 of
+	Padding = case PadCount band 1 of
 	0 ->
-		Padding = Pad;
+		Pad;
 	1 ->
-		Padding = <<Pad/binary, ?DATA_PAD_0>>
+		<<Pad/binary, ?DATA_PAD_0>>
 	end,
 	<<Bin/binary, Padding/binary>>.
 
